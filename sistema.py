@@ -1,94 +1,76 @@
+import os
 import streamlit as st
 import tensorflow as tf
+from tensorflow.keras.utils import load_img, img_to_array
 import numpy as np
 import cv2
 from PIL import Image
-from datetime import datetime
+import pandas as pd
 
-# Información de enfermedades
-disease_info = {
-    "Mancha Negra": {
-        "Nombre": "Mancha Negra",
-        "Precisión": "95%",
-        "Agente Causal": "Hongos",
-        "Síntomas": "Manchas oscuras en hojas y frutos",
-        "Recomendación": "Usar fungicidas y controlar la humedad"
-    },
-    "Cancro": {
-        "Nombre": "Cancro",
-        "Precisión": "92%",
-        "Agente Causal": "Bacterias",
-        "Síntomas": "Lesiones en hojas y ramas",
-        "Recomendación": "Aplicar cobre y podar las áreas afectadas"
-    },
-    "Enverdecimiento": {
-        "Nombre": "Enverdecimiento",
-        "Precisión": "89%",
-        "Agente Causal": "Bacterias transmitidas por insectos",
-        "Síntomas": "Hojas amarillentas y frutos deformados",
-        "Recomendación": "Control de insectos y plantas enfermas"
-    },
-    "Saludable": {
-        "Nombre": "Saludable",
-        "Precisión": "100%",
-        "Agente Causal": "N/A",
-        "Síntomas": "Sin síntomas",
-        "Recomendación": "No se requiere tratamiento"
-    }
-}
+# Configuraciones de entorno
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-# Cargar modelos con rutas relativas
-model_paths = {
-    "DenseNet121": "models/densetnet_121.keras",
-}
-models = {name: tf.keras.models.load_model(path) for name, path in model_paths.items()}
+# Define la ruta base donde se encuentran los modelos
+base_path = os.path.join(os.getcwd(), 'Models')
 
-# Función para predecir usando el modelo seleccionado
-def image_prediction(image, model):
-    image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-    image = cv2.resize(image, (150, 150))
-    image = image.reshape(1, 150, 150, 3)
-    pred = model.predict(image)
-    pred_class = np.argmax(pred, axis=1)[0]
-    accuracy = pred[0][pred_class]
+# Cargar los modelos
+model_path_1 = os.path.join(base_path,'densetnet_121.tflite')
+model = tf.lite.Interpreter(model_path_1)
+model.allocate_tensors()
 
-    labels = ["Mancha Negra", "Cancro", "Enverdecimiento", "Saludable"]
-    return labels[pred_class], accuracy
+# Función para predecir la imagen y devolver la etiqueta y la precisión
+def imagePrediction(image):
+    images = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+    images = cv2.resize(images, (150, 150))
+    images = images.reshape(1, 150, 150, 3)
+    prd_idx = model.predict(images)
+    prd_idx = np.argmax(prd_idx, axis=1)[0]
+    modelpre = model.predict(images)
+    accuracy = modelpre[0][prd_idx]
 
-# Interfaz de Streamlit
-st.title("Sistema de Citrus CDT")
+    if prd_idx == 0:
+        label = "Mancha Negra"
+    elif prd_idx == 1:
+        label = "Cancro"
+    elif prd_idx == 2:
+        label = "Enverdecimiento"
+    elif prd_idx == 3:
+        label = "Saludable"
+    else:
+        label = "Unknown"
 
-# Entrada de cámara
-image = st.camera_input("Captura una imagen para analizar")
+    return label, accuracy
 
-# Procesar la imagen y mostrar los resultados si se captura una imagen
-if image:
-    image_file = Image.open(image)
+# Interfaz de usuario con Streamlit
+st.title("Prediction of Neurodegenerative Diseases")
 
-    # Seleccionar modelo y predecir
-    selected_model_name = "DenseNet121"
-    selected_model = models[selected_model_name]
-    result, accuracy = image_prediction(image_file, selected_model)
-    accuracy_text = f"{accuracy * 100:.2f}%"  # Convierte el valor de precisión en porcentaje
+# Inicializar el estado de sesión si no existe
+if 'results' not in st.session_state:
+    st.session_state.results = []
 
-    # Mostrar imagen y tabla de información una al lado de la otra
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.image(image_file, caption=f"Predicción: {result} (Precisión: {accuracy_text})", use_column_width=True)
+# Subir nuevas imágenes
+uploaded_files = st.file_uploader("Choose images...", type=["jpg", "jpeg", "png"], accept_multiple_files=True)
 
-    with col2:
-        st.header("Información de la Enfermedad")
-        st.table({
-            "Categoría": ["Nombre", "Precisión", "Agente Causal", "Síntomas", "Recomendación"],
-            "Descripción": [
-                disease_info[result]["Nombre"],
-                accuracy_text,  # Usa la precisión calculada en lugar de la predefinida
-                disease_info[result]["Agente Causal"],
-                disease_info[result]["Síntomas"],
-                disease_info[result]["Recomendación"]
-            ]
+if uploaded_files:
+    new_results = []
+
+    for uploaded_file in uploaded_files:
+        image = Image.open(uploaded_file)
+        st.image(image, caption='Uploaded Image.', use_column_width=True)
+        
+        
+        label, accuracy = imagePrediction(image)
+        st.write(f'Model predicts that this is a {label} with an accuracy of {accuracy:.2f}')
+        
+        # Guardar resultados nuevos
+        new_results.append({
+            'Image': uploaded_file.name,
+            'Label': label,
+            'Accuracy': f'{accuracy:.2f}'
         })
 
-    # Mensaje de predicción y precisión
-    st.write(f"El modelo predice que esto es {result} con una precisión de {accuracy_text}")
+    # Agregar solo los resultados nuevos al estado de sesión
+    st.session_state.results.extend(new_results)
+
+
