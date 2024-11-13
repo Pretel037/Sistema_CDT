@@ -29,11 +29,13 @@ def imagePrediction(image):
     accuracy = modelpre[0][prd_idx]
 
     if prd_idx == 0:
-        label = "CONTROL"
+        label = "Mancha Negra"
     elif prd_idx == 1:
-        label = "Alzheimer's Disease"
+        label = "Cancro"
     elif prd_idx == 2:
-        label = "Parkinson's Disease"
+        label = "Enverdecimiento"
+    elif prd_idx == 3:
+        label = "Saludable"
     else:
         label = "Unknown"
 
