@@ -5,7 +5,6 @@ import cv2
 from PIL import Image
 from datetime import datetime
 
-# Información de enfermedades
 disease_info = {
     "Mancha Negra": {
         "Nombre": "Mancha Negra",
@@ -37,13 +36,12 @@ disease_info = {
     }
 }
 
-# Cargar modelos con rutas relativas
+
 model_paths = {
     "DenseNet121": "models/densetnet_121.keras",
 }
 models = {name: tf.keras.models.load_model(path) for name, path in model_paths.items()}
 
-# Función para predecir usando el modelo seleccionado
 def image_prediction(image, model):
     image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
     image = cv2.resize(image, (150, 150))
@@ -55,13 +53,13 @@ def image_prediction(image, model):
     labels = ["Mancha Negra", "Cancro", "Enverdecimiento", "Saludable"]
     return labels[pred_class], accuracy
 
-# Interfaz de Streamlit
+
 st.title("Sistema de Citrus CDT")
 
-# Entrada de cámara
+
 image = st.camera_input("Captura una imagen para analizar")
 
-# Procesar la imagen y mostrar los resultados si se captura una imagen
+
 if image:
     image_file = Image.open(image)
 
@@ -71,7 +69,7 @@ if image:
     result, accuracy = image_prediction(image_file, selected_model)
     accuracy_text = f"{accuracy * 100:.2f}%"  # Convierte el valor de precisión en porcentaje
 
-    # Mostrar imagen y tabla de información una al lado de la otra
+    
     col1, col2 = st.columns(2)
     
     with col1:
