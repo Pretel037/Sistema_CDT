@@ -3,7 +3,6 @@ import tensorflow as tf
 import numpy as np
 import cv2
 from PIL import Image
-import os
 from datetime import datetime
 
 # Información de enfermedades
@@ -44,16 +43,11 @@ model_paths = {
 }
 models = {name: tf.keras.models.load_model(path) for name, path in model_paths.items()}
 
-# Crear directorio para guardar imágenes en una ruta relativa
-image_folder = "imagenes"
-if not os.path.exists(image_folder):
-    os.makedirs(image_folder)
-
 # Función para predecir usando el modelo seleccionado
 def image_prediction(image, model):
     image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-    image = cv2.resize(image, (265, 265))
-    image = image.reshape(1, 265, 265, 3)
+    image = cv2.resize(image, (150, 150))
+    image = image.reshape(1, 150, 150, 3)
     pred = model.predict(image)
     pred_class = np.argmax(pred, axis=1)[0]
     accuracy = pred[0][pred_class]
@@ -70,9 +64,6 @@ image = st.camera_input("Captura una imagen para analizar")
 # Procesar la imagen y mostrar los resultados si se captura una imagen
 if image:
     image_file = Image.open(image)
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    image_path = os.path.join(image_folder, f"captura_{timestamp}.png")
-    image_file.save(image_path)
 
     # Seleccionar modelo y predecir
     selected_model_name = "DenseNet121"
