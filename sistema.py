@@ -13,22 +13,34 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 # Define la ruta base donde se encuentran los modelos
 base_path = os.path.join(os.getcwd(), 'Models')
-
 # Cargar el modelo
 model_path_1 = os.path.join(base_path, 'densenet_121.tflite')
 model = tf.lite.Interpreter(model_path=model_path_1)
 model.allocate_tensors()
 
+# Obtener detalles de entrada y salida
+input_details = model.get_input_details()
+output_details = model.get_output_details()
+
 # Función para predecir la imagen y devolver la etiqueta y la precisión
 def imagePrediction(image):
+    # Procesar la imagen
     images = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
     images = cv2.resize(images, (150, 150))
-    images = images.reshape(1, 150, 150, 3)
-    prd_idx = model.predict(images)
-    prd_idx = np.argmax(prd_idx, axis=1)[0]
-    modelpre = model.predict(images)
-    accuracy = modelpre[0][prd_idx]
+    images = images.reshape(1, 150, 150, 3).astype(np.float32)
 
+    # Configurar el tensor de entrada
+    model.set_tensor(input_details[0]['index'], images)
+    
+    # Ejecutar la predicción
+    model.invoke()
+    
+    # Obtener el resultado
+    predictions = model.get_tensor(output_details[0]['index'])
+    prd_idx = np.argmax(predictions, axis=1)[0]
+    accuracy = predictions[0][prd_idx]
+
+    # Determinar la etiqueta basada en la predicción
     if prd_idx == 0:
         label = "Mancha Negra"
     elif prd_idx == 1:
@@ -41,6 +53,7 @@ def imagePrediction(image):
         label = "Unknown"
 
     return label, accuracy
+
 
 # Interfaz de usuario con Streamlit
 st.title("Prediction of Neurodegenerative Diseases")
