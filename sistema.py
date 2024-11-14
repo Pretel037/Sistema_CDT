@@ -32,7 +32,8 @@ def load_model(model_path):
 
 with st.spinner('Cargando modelos...'):
     models = {
-
+        "DenseNet121": load_model(os.path.join(base_path, 'densetnet_121.tflite')),
+        "Efficientnetb_30Lite": load_model(os.path.join(base_path, 'Efficientnetb_30Lite.tflite')),
         "Inseptionv3": load_model(os.path.join(base_path, 'Inseptionv3.tflite')),
         
     }
