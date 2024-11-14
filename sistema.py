@@ -57,7 +57,13 @@ def image_prediction(image, model):
     accuracy = pred[0][pred_class]
     labels = ["Mancha Negra", "Cancro", "Enverdecimiento", "Saludable"]
     return labels[pred_class], accuracy
-
+st.image('Logo_SmartRegions.gif')
+st.title("Smart Regions Center")
+st.write("Somos un equipo apasionado de profesionales dedicados a hacer la diferencia")
+st.write("""
+         # Detección de enfermedades del mango con su recomendación de tratamiento
+         """
+         )
 # Interfaz de Streamlit
 st.title("Sistema de Citrus CDT")
 with st.sidebar:
