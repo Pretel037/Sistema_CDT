@@ -4,7 +4,7 @@ import numpy as np
 import cv2
 from PIL import Image
 from datetime import datetime
-
+import os
 # Información de enfermedades
 disease_info = {
     "Mancha Negra": {
@@ -37,20 +37,26 @@ disease_info = {
     }
 }
 
-# Cargar modelos con rutas relativas
-model_paths = {
-    "DenseNet121": "models/densetnet_121.keras",
-}
 
-interpreter = tf.lite.Interpreter(model_path="converted_model.tflite")
-interpreter.allocate_tensors()
-models = {name: tf.keras.models.load_model(path) for name, path in model_paths.items()}
+
+# Define la ruta base donde se encuentran los modelos
+base_path = os.path.join(os.getcwd(), 'models')
+# Cargar el modelo
+
+
+model_path_1 = os.path.join(base_path, 'densetnet_121.tflite')
+
+
+model = tf.lite.Interpreter(model_path=model_path_1)
+model.allocate_tensors()
+
+
 
 # Función para predecir usando el modelo seleccionado
 def image_prediction(image, model):
     image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-    image = cv2.resize(image, (150, 150))
-    image = image.reshape(1, 150, 150, 3)
+    image = cv2.resize(image, (265, 265))
+    image = image.reshape(1, 265, 265, 3)
     pred = model.predict(image)
     pred_class = np.argmax(pred, axis=1)[0]
     accuracy = pred[0][pred_class]
