@@ -1,0 +1,30 @@
+{
+    "Mancha Negra": {
+        "Nombre": "Mancha Negra",
+        "Precisión": "95%",
+        "Agente Causal": "Hongos",
+        "Síntomas": "Manchas oscuras en hojas y frutos",
+        "Recomendación": "Usar fungicidas y controlar la humedad"
+    },
+    "Cancro": {
+        "Nombre": "Cancro",
+        "Precisión": "92%",
+        "Agente Causal": "Bacterias",
+        "Síntomas": "Lesiones en hojas y ramas",
+        "Recomendación": "Aplicar cobre y podar las áreas afectadas"
+    },
+    "Enverdecimiento": {
+        "Nombre": "Enverdecimiento",
+        "Precisión": "89%",
+        "Agente Causal": "Bacterias transmitidas por insectos",
+        "Síntomas": "Hojas amarillentas y frutos deformados",
+        "Recomendación": "Control de insectos y plantas enfermas"
+    },
+    "Saludable": {
+        "Nombre": "Saludable",
+        "Precisión": "100%",
+        "Agente Causal": "N/A",
+        "Síntomas": "Sin síntomas",
+        "Recomendación": "No se requiere tratamiento"
+    }
+}

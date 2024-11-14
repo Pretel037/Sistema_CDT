@@ -1,3 +1,4 @@
+import json
 import streamlit as st
 import tensorflow as tf
 import numpy as np
@@ -5,37 +6,15 @@ import cv2
 from PIL import Image
 import os
 
-# Información de enfermedades
-disease_info = {
-    "Mancha Negra": {
-        "Nombre": "Mancha Negra",
-        "Precisión": "95%",
-        "Agente Causal": "Hongos",
-        "Síntomas": "Manchas oscuras en hojas y frutos",
-        "Recomendación": "Usar fungicidas y controlar la humedad"
-    },
-    "Cancro": {
-        "Nombre": "Cancro",
-        "Precisión": "92%",
-        "Agente Causal": "Bacterias",
-        "Síntomas": "Lesiones en hojas y ramas",
-        "Recomendación": "Aplicar cobre y podar las áreas afectadas"
-    },
-    "Enverdecimiento": {
-        "Nombre": "Enverdecimiento",
-        "Precisión": "89%",
-        "Agente Causal": "Bacterias transmitidas por insectos",
-        "Síntomas": "Hojas amarillentas y frutos deformados",
-        "Recomendación": "Control de insectos y plantas enfermas"
-    },
-    "Saludable": {
-        "Nombre": "Saludable",
-        "Precisión": "100%",
-        "Agente Causal": "N/A",
-        "Síntomas": "Sin síntomas",
-        "Recomendación": "No se requiere tratamiento"
-    }
-}
+# Cargar información de enfermedades desde el archivo JSON
+def load_disease_info(file_path):
+    with open(file_path, 'r', encoding='utf-8') as file:
+        disease_info = json.load(file)
+    return disease_info
+
+# Ruta al archivo de enfermedades
+disease_info_file = 'enfermedades.txt'
+disease_info = load_disease_info(disease_info_file)
 
 # Define la ruta base donde se encuentran los modelos
 base_path = os.path.join(os.getcwd(), 'models')
