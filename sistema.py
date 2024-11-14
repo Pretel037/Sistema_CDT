@@ -65,7 +65,7 @@ st.write("Somos un equipo apasionado de profesionales dedicados a hacer la difer
 st.title("Sistema de Citrus CDT")
 with st.sidebar:
         st.image('hojas.png')
-        st.title("Estado de salud Manguifera")
+        st.title("Estado de salud la planta de Citrico")
         st.subheader("Detección de enfermedades presentes en las hojas del Citricos usando Depp Learning DensetNet. Esto ayuda al campesino a detectar fácilmente la enfermedad e identificar su causa.")
 
 # Entrada de cámara
@@ -103,4 +103,4 @@ if image:
         })
 
     # Mensaje de predicción y precisión
-    st.write(f"El modelo predice que esto es {result} con una precisión de {accuracy_text}")
+    st.info((f"El modelo predice que esto es {result} con una precisión de {accuracy_text}")
