@@ -19,20 +19,21 @@ disease_info = load_disease_info(disease_info_file)
 # Define la ruta base donde se encuentran los modelos
 base_path = os.path.join(os.getcwd(), 'models')
 
-# Diccionario para almacenar modelos cargados
-models = {}
-
-# Función para cargar un modelo Keras o TFLite
-def load_model(model_name, model_path):
+# Carga de modelo en caché
+@st.cache_resource
+def load_model(model_path):
     if model_path.endswith('.tflite'):
         interpreter = tf.lite.Interpreter(model_path=model_path)
         interpreter.allocate_tensors()
-        models[model_name] = interpreter
+        return interpreter
     else:
-        models[model_name] = tf.keras.models.load_model(model_path)
+        return tf.keras.models.load_model(model_path)
 
-# Cargar modelos (puedes agregar más modelos aquí)
-load_model("DenseNet121", os.path.join(base_path, 'densetnet_121.tflite'))
+# Cargar los modelos (agrega más modelos aquí si los tienes)
+with st.spinner('Cargando modelos...'):
+    models = {
+        "DenseNet121": load_model(os.path.join(base_path, 'densetnet_121.tflite'))
+    }
 
 # Función para predecir usando el modelo seleccionado
 def image_prediction(image, model):
@@ -67,9 +68,11 @@ image = st.camera_input("Captura una imagen para analizar")
 if image:
     image_file = Image.open(image)
 
-    # Seleccionar modelo y predecir
-    selected_model_name = "DenseNet121"
+    # Seleccionar modelo
+    selected_model_name = st.selectbox("Selecciona el modelo", list(models.keys()))
     selected_model = models[selected_model_name]
+
+    # Predicción
     result, accuracy = image_prediction(image_file, selected_model)
     accuracy_text = f"{accuracy * 100:.2f}%"  # Convierte el valor de precisión en porcentaje
 
