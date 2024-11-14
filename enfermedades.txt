@@ -4,21 +4,21 @@
         "Precisión": "95%",
         "Agente Causal": "Hongos",
         "Síntomas": "Manchas oscuras en hojas y frutos",
-        "Recomendación": "Usar fungicidas y controlar la humedad"
+        "Recomendación": "Mejorar la circulación de aire, eliminar las hojas afectadas y evitar el exceso de riego"
     },
     "Cancro": {
         "Nombre": "Cancro",
         "Precisión": "92%",
         "Agente Causal": "Bacterias",
         "Síntomas": "Lesiones en hojas y ramas",
-        "Recomendación": "Aplicar cobre y podar las áreas afectadas"
+        "Recomendación": "Podar las áreas afectadas y desinfectar las herramientas de poda para evitar la propagación"
     },
     "Enverdecimiento": {
         "Nombre": "Enverdecimiento",
         "Precisión": "89%",
         "Agente Causal": "Bacterias transmitidas por insectos",
         "Síntomas": "Hojas amarillentas y frutos deformados",
-        "Recomendación": "Control de insectos y plantas enfermas"
+        "Recomendación": "Eliminar las plantas afectadas, controlar la plaga de insectos y mejorar la salud general de las plantas"
     },
     "Saludable": {
         "Nombre": "Saludable",
