@@ -26,8 +26,8 @@ output_details = model.get_output_details()
 def imagePrediction(image):
     # Procesar la imagen
     images = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-    images = cv2.resize(images, (150, 150))
-    images = images.reshape(1, 150, 150, 3).astype(np.float32)
+    images = cv2.resize(images, (265, 265))
+    images = images.reshape(1, 265, 265, 3).astype(np.float32)
 
     # Configurar el tensor de entrada
     model.set_tensor(input_details[0]['index'], images)
@@ -67,6 +67,7 @@ uploaded_files = st.file_uploader("Choose images...", type=["jpg", "jpeg", "png"
 
 if uploaded_files:
     new_results = []
+
 
     for uploaded_file in uploaded_files:
         image = Image.open(uploaded_file)
