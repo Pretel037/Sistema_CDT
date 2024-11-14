@@ -64,7 +64,7 @@ st.write("Somos un equipo apasionado de profesionales dedicados a hacer la difer
 # Interfaz de Streamlit
 st.title("Sistema de Citrus CDT")
 with st.sidebar:
-        st.image('hojas.png')
+        st.image('hojass.png')
         st.title("Estado de salud la planta de Citrico")
         st.subheader("Detección de enfermedades presentes en las hojas del Citricos usando Depp Learning DensetNet. Esto ayuda al campesino a detectar fácilmente la enfermedad e identificar su causa.")
 
