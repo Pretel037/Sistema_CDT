@@ -14,7 +14,11 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 # Define la ruta base donde se encuentran los modelos
 base_path = os.path.join(os.getcwd(), 'models')
 # Cargar el modelo
-model_path_1 = os.path.join(base_path, 'densenet_121.tflite')
+
+
+model_path_1 = os.path.join(base_path, 'densetnet_121.tflite')
+
+
 model = tf.lite.Interpreter(model_path=model_path_1)
 model.allocate_tensors()
 
