@@ -60,10 +60,7 @@ def image_prediction(image, model):
 st.image('Logo_SmartRegions.gif')
 st.title("Smart Regions Center")
 st.write("Somos un equipo apasionado de profesionales dedicados a hacer la diferencia")
-st.write("""
-         # Detección de enfermedades del mango con su recomendación de tratamiento
-         """
-         )
+
 # Interfaz de Streamlit
 st.title("Sistema de Citrus CDT")
 with st.sidebar:
