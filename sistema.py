@@ -3,8 +3,8 @@ import tensorflow as tf
 import numpy as np
 import cv2
 from PIL import Image
-from datetime import datetime
 import os
+
 # Información de enfermedades
 disease_info = {
     "Mancha Negra": {
@@ -37,30 +37,44 @@ disease_info = {
     }
 }
 
-
-
 # Define la ruta base donde se encuentran los modelos
 base_path = os.path.join(os.getcwd(), 'models')
-# Cargar el modelo
 
+# Diccionario para almacenar modelos cargados
+models = {}
 
-model_path_1 = os.path.join(base_path, 'densetnet_121.tflite')
+# Función para cargar un modelo Keras o TFLite
+def load_model(model_name, model_path):
+    if model_path.endswith('.tflite'):
+        interpreter = tf.lite.Interpreter(model_path=model_path)
+        interpreter.allocate_tensors()
+        models[model_name] = interpreter
+    else:
+        models[model_name] = tf.keras.models.load_model(model_path)
 
-
-model = tf.lite.Interpreter(model_path=model_path_1)
-model.allocate_tensors()
-
-
+# Cargar modelos (puedes agregar más modelos aquí)
+load_model("DenseNet121", os.path.join(base_path, 'densetnet_121.tflite'))
 
 # Función para predecir usando el modelo seleccionado
 def image_prediction(image, model):
+    # Preprocesar imagen
     image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
     image = cv2.resize(image, (265, 265))
-    image = image.reshape(1, 265, 265, 3)
-    pred = model.predict(image)
+    image = image.reshape(1, 265, 265, 3).astype(np.float32)
+
+    # Predicción dependiendo del tipo de modelo
+    if isinstance(model, tf.keras.Model):  # Para modelos Keras
+        pred = model.predict(image)
+    else:  # Para modelos TFLite
+        input_details = model.get_input_details()
+        output_details = model.get_output_details()
+        model.set_tensor(input_details[0]['index'], image)
+        model.invoke()
+        pred = model.get_tensor(output_details[0]['index'])
+
+    # Obtener clase y precisión
     pred_class = np.argmax(pred, axis=1)[0]
     accuracy = pred[0][pred_class]
-
     labels = ["Mancha Negra", "Cancro", "Enverdecimiento", "Saludable"]
     return labels[pred_class], accuracy
 
