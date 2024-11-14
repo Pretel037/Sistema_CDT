@@ -103,4 +103,4 @@ if image:
         })
 
     # Mensaje de predicción y precisión
-    st.info((f"El modelo predice que esto es {result} con una precisión de {accuracy_text}")
+    st.info(f"El modelo predice que esto es {result} con una precisión de {accuracy_text}")
