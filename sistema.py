@@ -29,12 +29,12 @@ def load_model(model_path):
     else:
         return tf.keras.models.load_model(model_path)
 
-# Cargar los modelos (agrega más modelos aquí si los tienes)
+
 with st.spinner('Cargando modelos...'):
     models = {
-        "DenseNet121": load_model(os.path.join(base_path, 'densetnet_121.tflite')),
-        "Efficientnetb_30Lite": load_model(os.path.join(base_path, 'Efficientnetb_30Lite.tflite')),
-        "citrus_modelLite": load_model(os.path.join(base_path, 'citrus_modelLite.tflite')),
+
+        "Inseptionv3": load_model(os.path.join(base_path, 'Inseptionv3.tflite')),
+        
     }
 
 # Función para predecir usando el modelo seleccionado
