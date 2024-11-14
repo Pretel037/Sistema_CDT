@@ -60,6 +60,10 @@ def image_prediction(image, model):
 
 # Interfaz de Streamlit
 st.title("Sistema de Citrus CDT")
+with st.sidebar:
+        st.image('hojas.png')
+        st.title("Estado de salud Manguifera")
+        st.subheader("Detección de enfermedades presentes en las hojas del Citricos usando Depp Learning DensetNet. Esto ayuda al campesino a detectar fácilmente la enfermedad e identificar su causa.")
 
 # Entrada de cámara
 image = st.camera_input("Captura una imagen para analizar")
