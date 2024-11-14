@@ -34,7 +34,7 @@ with st.spinner('Cargando modelos...'):
     models = {
         "DenseNet121": load_model(os.path.join(base_path, 'densetnet_121.tflite')),
         "Efficientnetb_30Lite": load_model(os.path.join(base_path, 'Efficientnetb_30Lite.tflite')),
-        "citrus_modelLite": load_model(os.path.join(base_path, 'citrus_modelLite.tflite'))
+        "citrus_modelLite": load_model(os.path.join(base_path, 'citrus_modelLite.tflite')),
     }
 
 # Función para predecir usando el modelo seleccionado
